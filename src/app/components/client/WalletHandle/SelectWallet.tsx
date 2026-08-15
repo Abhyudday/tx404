@@ -1,5 +1,5 @@
 "use client";
-import styles from "../../../uni.module.css";
+import styles from "../../../console.module.css";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
 import { useEffect, useState } from "react";
@@ -141,8 +141,11 @@ export default function SelectWallet({ variant = "ctaBig" }: { variant?: "nav" |
                 onClick={() => selectWallet(w)}
                 disabled={connecting}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.walletIcon} src={w.icon} alt="" />
+                {/* .walletIcon is the 32px frame; the image fills it. */}
+                <span className={styles.walletIcon}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={w.icon} alt="" />
+                </span>
                 <span className={styles.walletName}>{w.name}</span>
                 <span className={styles.walletGo}>{connecting ? "…" : "→"}</span>
               </button>

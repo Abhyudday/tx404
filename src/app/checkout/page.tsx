@@ -93,9 +93,27 @@ export default function CheckoutPage() {
             <input value={reference} onChange={(event) => setReference(event.target.value)} />
           </label>
 
+          {/* Straight from the SDK's disclosure table, in the same vocabulary as the
+              hero ledger and the console panel: hatched means the pool keeps it,
+              a legible row means an observer learns it. */}
           <div className={styles.disclosure}>
-            <div><strong>Private</strong><span>{DISCLOSURES.transfer.private.join(", ")}</span></div>
-            <div><strong>Visible</strong><span>{DISCLOSURES.transfer.public.join(", ")}</span></div>
+            <div className={styles.disclosureHead}>
+              <span>What this payment reveals</span>
+              <span>In-pool transfer</span>
+            </div>
+            {DISCLOSURES.transfer.private.map((field) => (
+              <div className={styles.disclosureRow} key={`private-${field}`}>
+                <span className={styles.disclosureText}>{field}</span>
+                <span className={styles.disclosureMark} aria-hidden="true" />
+                <span className={`${styles.disclosureTag} ${styles.tagShield}`}>Private</span>
+              </div>
+            ))}
+            {DISCLOSURES.transfer.public.map((field) => (
+              <div className={styles.disclosureRow} key={`public-${field}`}>
+                <span className={styles.disclosureText}>{field}</span>
+                <span className={`${styles.disclosureTag} ${styles.tagExpose}`}>Onchain</span>
+              </div>
+            ))}
           </div>
 
           <button

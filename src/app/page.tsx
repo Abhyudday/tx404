@@ -1,8 +1,16 @@
 "use client";
 
+import { DISCLOSURES } from "@tx404/core";
 import styles from "./home.module.css";
 import SelectWallet from "./components/client/WalletHandle/SelectWallet";
 import WalletAccountV6Tag from "./components/client/WalletHandle/WalletAccountV6Tag";
+
+/* The hero's ledger is rendered from the SDK's own disclosure table rather than
+   from marketing copy, so the page cannot claim more privacy than the client
+   actually delivers. Hatched row = private. The legible footer = the one thing
+   an observer really does learn. */
+const PRIVATE_FIELDS = DISCLOSURES.transfer.private;
+const PUBLIC_FIELDS = DISCLOSURES.transfer.public;
 
 export default function Page() {
   return (
@@ -21,54 +29,120 @@ export default function Page() {
       <main>
         <section className={styles.hero}>
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}><span /> PRIVACY INFRASTRUCTURE FOR STARKNET</p>
-            <h1>Make the<br /><em>transaction</em><br />disappear.</h1>
-            <p className={styles.heroSub}>A non-custodial SDK for private payments, balances, and transfers. Your users keep every key. Your app ships the experience.</p>
+            <p className={styles.eyebrow}>
+              <span className={styles.eyebrowMark} /> Privacy infrastructure for Starknet
+            </p>
+            <h1 className={styles.heroTitle}>
+              Transfers that<br />settle without<br /><em>saying who.</em>
+            </h1>
+            <p className={styles.heroSub}>
+              Tx404 is a non-custodial SDK for shielded STRK20 transfers. Keys, notes, and
+              proofs stay inside the user&rsquo;s wallet — your app calls four methods.
+            </p>
             <div className={styles.heroActions}>
-              <a className={styles.primaryAction} href="#console">Open the console <span>↘</span></a>
-              <a className={styles.secondaryAction} href="https://github.com/Abhyudday/tx404" target="_blank" rel="noreferrer">Read the source <span>↗</span></a>
+              <a className={styles.primaryAction} href="#console">
+                Open the console <span className={styles.actionGlyph} aria-hidden="true">↓</span>
+              </a>
+              <a
+                className={styles.secondaryAction}
+                href="https://github.com/Abhyudday/tx404"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Read the source <span className={styles.actionGlyph} aria-hidden="true">↗</span>
+              </a>
             </div>
           </div>
 
-          <div className={styles.heroDiagram} aria-label="Tx404 privacy flow diagram">
-            <div className={styles.diagramHeader}><span>TX404 / FLOW_01</span><span>NON-CUSTODIAL</span></div>
-            <div className={styles.diagramCanvas}>
-              <div className={styles.diagramLine} />
-              <div className={`${styles.node} ${styles.nodeWallet}`}><b>W</b><span>USER WALLET</span></div>
-              <div className={`${styles.node} ${styles.nodeTx}`}><strong>404</strong><span>TX404 LAYER</span></div>
-              <div className={`${styles.node} ${styles.nodePool}`}><b>◇</b><span>STRK20 POOL</span></div>
-              <div className={styles.flowLabel}>key material<br /><strong>never leaves</strong></div>
-              <div className={styles.diagramFoot}><span>shielded state</span><span>public edge</span></div>
+          <div className={styles.observer}>
+            <div className={styles.observerHead}>
+              <span className={styles.observerTitle}>What an observer sees</span>
+              <span className={styles.observerChip}>In-pool transfer</span>
+            </div>
+
+            <div className={styles.ledger}>
+              {PRIVATE_FIELDS.map((field) => (
+                <div className={styles.row} key={field}>
+                  <span className={styles.rowKey}>{field}</span>
+                  <span className={styles.rowVal}>
+                    <span className={styles.bar} aria-hidden="true" />
+                    <span className={styles.srOnly}>Not published</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.observerFoot}>
+              <span className={styles.footLabel}><i /> Published onchain</span>
+              <p className={styles.footText}>{PUBLIC_FIELDS.join(". ")}.</p>
             </div>
           </div>
         </section>
 
-        <section className={styles.metrics}>
-          <div><strong>01</strong><span>Wallet-mediated</span><small>No custody. No keys.</small></div>
-          <div><strong>02</strong><span>Four primitives</span><small>Shield / send / unshield / query</small></div>
-          <div><strong>03</strong><span>Built for builders</span><small>TypeScript core + React hooks</small></div>
+        <section className={styles.facts}>
+          <div className={styles.fact}>
+            <span className={styles.factKey}>No custody</span>
+            <p className={styles.factName}>Keys never leave the wallet</p>
+            <p className={styles.factNote}>
+              Tx404 is not a custodian, a relayer, or a wallet. It holds no keys and cannot
+              move funds on anyone&rsquo;s behalf.
+            </p>
+          </div>
+          <div className={styles.fact}>
+            <span className={styles.factKey}>Four methods</span>
+            <p className={styles.factName}>Shield, transfer, unshield, balances</p>
+            <p className={styles.factNote}>
+              Every call returns a submission you await, then a receipt you await. The same
+              shape each time.
+            </p>
+          </div>
+          <div className={styles.fact}>
+            <span className={styles.factKey}>Your design system</span>
+            <p className={styles.factName}>Typed core, optional UI</p>
+            <p className={styles.factNote}>
+              A TypeScript core with React hooks. The bundled components are
+              CSS-variable driven, so they inherit your tokens instead of fighting them.
+            </p>
+          </div>
         </section>
 
         <section id="console" className={styles.consoleSection}>
           <div className={styles.sectionIntro}>
-            <p className={styles.eyebrow}><span /> LIVE REFERENCE CONSOLE</p>
-            <h2>Try the private rail.</h2>
-            <p>Connect a privacy-enabled wallet to test the same primitives an integrating app calls. Start on Sepolia.</p>
+            <p className={styles.eyebrow}>
+              <span className={styles.eyebrowMark} /> Live reference console
+            </p>
+            <h2 className={styles.sectionTitle}>Run the real thing.</h2>
+            <p className={styles.sectionNote}>
+              The console calls the same methods your app would. Connect a privacy-enabled
+              wallet on Sepolia — before each call it shows what stays in the pool and what
+              goes onchain.
+            </p>
           </div>
+
           <div className={styles.consoleFrame}>
-            <div className={styles.consoleBar}><span className={styles.liveDot} /> TX404 CONTROL SURFACE <span className={styles.barMeta}>TESTNET FIRST / READY</span></div>
+            <div className={styles.consoleBar}>
+              <span className={styles.liveDot} /> Tx404 reference console
+              <span className={styles.barMeta}>Sepolia first</span>
+            </div>
             <WalletAccountV6Tag />
           </div>
         </section>
 
         <section className={styles.bottomBand}>
-          <div><span className={styles.bigCode}>tx404</span><p>Private by architecture.<br />Simple by interface.</p></div>
-          <a href="/checkout" className={styles.checkoutLink}>Open private checkout <span>↗</span></a>
+          <div>
+            <span className={styles.wordmark}>tx404</span>
+            <p className={styles.bandCopy}>
+              The pool keeps the details. Your product keeps the experience.
+            </p>
+          </div>
+          <a href="/checkout" className={styles.checkoutLink}>
+            Open the private checkout <span className={styles.actionGlyph} aria-hidden="true">→</span>
+          </a>
         </section>
       </main>
 
       <footer className={styles.footer}>
-        <span>TX404 / OPEN INFRASTRUCTURE</span>
+        <span>Tx404 / open infrastructure</span>
         <span>Starknet.js v10.4.0 · Wallet API 0.10.3</span>
         <a href="https://strk20-by-example.org/" target="_blank" rel="noreferrer">STRK20 docs ↗</a>
       </footer>

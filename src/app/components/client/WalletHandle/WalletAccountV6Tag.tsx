@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { constants as starknetConstants, hash, json, num, shortString, validateAndParseAddress } from "starknet";
+import { constants as starknetConstants, hash, json, num, validateAndParseAddress } from "starknet";
 import type { WALLET_API } from "@starknet-io/types-js";
 import { createTx404, DISCLOSURES, type Tx404Submission } from "@tx404/core";
-import styles from "../../../uni.module.css";
+import styles from "../../../console.module.css";
 import * as constants from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
@@ -132,15 +132,27 @@ function errorResult(msg: string): ActionResult {
   return { status: "error", title: "Action failed", note: msg };
 }
 
-// Tabs - one STRK20 action each (Umbra-style single-action interface).
+// Tabs - one STRK20 action each. The labels are the SDK's own verbs (shield, pay,
+// unshield, balances) so the page, the console and the docs all say the same word
+// for the same call.
 type TabKey = "shield" | "send" | "unshield" | "echo" | "balances";
 const TABS: { key: TabKey; label: string }[] = [
   { key: "shield", label: "Shield" },
-  { key: "send", label: "Send" },
+  { key: "send", label: "Pay" },
   { key: "unshield", label: "Unshield" },
-  { key: "echo", label: "Echo" },
   { key: "balances", label: "Balances" },
+  { key: "echo", label: "Echo" },
 ];
+
+// Each tab reads its disclosure straight from the SDK rather than from marketing
+// copy, so the panel can never claim more privacy than the operation delivers.
+const DISCLOSURE_FOR: Record<TabKey, keyof typeof DISCLOSURES> = {
+  shield: "shield",
+  send: "transfer",
+  unshield: "unshield",
+  balances: "balances",
+  echo: "invoke",
+};
 
 export default function WalletAccountV6Tag() {
   const myFrontendProviderIndex = useFrontendProvider(
@@ -519,6 +531,10 @@ export default function WalletAccountV6Tag() {
     balances: { label: "Shielded balances", value: "All", token: "tokens", hint: "Read your private pool balances", cta: "Query balances", onRun: handleBalances, result: resultBalances, disabled: !isStrk20Network || !privacySupported },
   };
   const active = CONFIG[tab];
+  // Read straight from the SDK table — including the cases where the honest
+  // answer is "this one publishes a lot" (shield, unshield).
+  const disclosure = DISCLOSURES[DISCLOSURE_FOR[tab]];
+  const tabLabel = TABS.find((t) => t.key === tab)?.label ?? tab;
 
   return (
     <div className={styles.panel}>
@@ -585,6 +601,29 @@ export default function WalletAccountV6Tag() {
           {resultDeploy ? <ResultCard r={resultDeploy} /> : null}
         </>
       )}
+
+      {/* What this specific call discloses, shown before the user commits to it.
+          Hatched = the pool keeps it. A legible row = an observer learns it.
+          Same vocabulary as the landing ledger, same source of truth. */}
+      <div className={styles.discl}>
+        <div className={styles.disclHead}>
+          <span>What this call reveals</span>
+          <span>{tabLabel}</span>
+        </div>
+        {disclosure.private.map((field) => (
+          <div className={styles.disclRow} key={`private-${field}`}>
+            <span className={styles.disclText}>{field}</span>
+            <span className={styles.disclMark} aria-hidden="true" />
+            <span className={`${styles.disclTag} ${styles.disclShield}`}>Private</span>
+          </div>
+        ))}
+        {disclosure.public.map((field) => (
+          <div className={styles.disclRow} key={`public-${field}`}>
+            <span className={styles.disclText}>{field}</span>
+            <span className={`${styles.disclTag} ${styles.disclExpose}`}>Onchain</span>
+          </div>
+        ))}
+      </div>
 
       {/* Primary CTA - connect prompt until a wallet is connected. */}
       {isConnected ? (
