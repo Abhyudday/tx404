@@ -1,84 +1,76 @@
 "use client";
 
-import type { CSSProperties } from 'react';
-import styles from './uni.module.css';
-import SelectWallet from './components/client/WalletHandle/SelectWallet';
-import WalletAccountV6Tag from './components/client/WalletHandle/WalletAccountV6Tag';
-import { StrkCoin, BtcCoin, EthCoin, UsdcCoin, ZecCoin } from './components/TokenIcons';
-
-// Scattered, blurred token coins on the sides of the page (background ambience).
-type BgToken = {
-  Coin: (p: { size?: number }) => React.ReactElement;
-  pos: CSSProperties;
-  size: number;
-  blur: number;
-  opacity: number;
-};
-const BG_TOKENS: BgToken[] = [
-  // Left edge
-  { Coin: StrkCoin, pos: { top: '30%', left: '3%' }, size: 116, blur: 5, opacity: 0.55 },
-  { Coin: BtcCoin, pos: { top: '38%', left: '18%' }, size: 92, blur: 4, opacity: 0.5 },
-  { Coin: ZecCoin, pos: { top: '64%', left: '9%' }, size: 140, blur: 6, opacity: 0.5 },
-  { Coin: EthCoin, pos: { top: '11%', left: '22%' }, size: 84, blur: 4, opacity: 0.5 },
-  { Coin: UsdcCoin, pos: { top: '86%', left: '20%' }, size: 104, blur: 5, opacity: 0.5 },
-  // Right edge
-  { Coin: EthCoin, pos: { top: '7%', right: '18%' }, size: 128, blur: 5, opacity: 0.55 },
-  { Coin: BtcCoin, pos: { top: '12%', right: '4%' }, size: 96, blur: 4, opacity: 0.5 },
-  { Coin: StrkCoin, pos: { top: '54%', right: '6%' }, size: 132, blur: 6, opacity: 0.55 },
-  { Coin: UsdcCoin, pos: { top: '76%', right: '9%' }, size: 104, blur: 5, opacity: 0.5 },
-  { Coin: ZecCoin, pos: { top: '88%', right: '20%' }, size: 100, blur: 5, opacity: 0.48 },
-  // Center accents (top & bottom)
-  { Coin: BtcCoin, pos: { top: '5%', left: '42%' }, size: 116, blur: 5, opacity: 0.45 },
-  { Coin: StrkCoin, pos: { bottom: '-1%', left: '48%' }, size: 124, blur: 6, opacity: 0.48 },
-];
+import styles from "./home.module.css";
+import SelectWallet from "./components/client/WalletHandle/SelectWallet";
+import WalletAccountV6Tag from "./components/client/WalletHandle/WalletAccountV6Tag";
 
 export default function Page() {
   return (
     <div className={styles.page}>
-      <div className={styles.aurora} aria-hidden>
-        {BG_TOKENS.map((t, i) => (
-          <span
-            key={i}
-            className={styles.tok}
-            style={{ ...t.pos, filter: `blur(${t.blur}px)`, opacity: t.opacity }}
-          >
-            <t.Coin size={t.size} />
-          </span>
-        ))}
-      </div>
-
       <nav className={styles.nav}>
-        <div className={styles.brand}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/tokens/strk20.png" alt="STRK20" className={styles.brandImg} />
+        <a href="/" className={styles.brand}>
+          <span className={styles.brandMark}>404</span>
+          <span>tx404</span>
+        </a>
+        <div className={styles.navRight}>
+          <span className={styles.networkTag}><i /> Starknet / STRK20</span>
+          <SelectWallet variant="nav" />
         </div>
-        <SelectWallet variant="nav" />
       </nav>
 
-      <header className={styles.hero}>
-        <h1 className={styles.heroTitle}>
-          Tx404
-          <br />
-          <span className={styles.heroAccent}>Private by default</span>
-        </h1>
-        <p className={styles.heroSub}>
-          Non-custodial shield, unshield and private transfer primitives for
-          Starknet apps.
-        </p>
-      </header>
-
       <main>
-        <WalletAccountV6Tag />
+        <section className={styles.hero}>
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}><span /> PRIVACY INFRASTRUCTURE FOR STARKNET</p>
+            <h1>Make the<br /><em>transaction</em><br />disappear.</h1>
+            <p className={styles.heroSub}>A non-custodial SDK for private payments, balances, and transfers. Your users keep every key. Your app ships the experience.</p>
+            <div className={styles.heroActions}>
+              <a className={styles.primaryAction} href="#console">Open the console <span>↘</span></a>
+              <a className={styles.secondaryAction} href="https://github.com/Abhyudday/tx404" target="_blank" rel="noreferrer">Read the source <span>↗</span></a>
+            </div>
+          </div>
+
+          <div className={styles.heroDiagram} aria-label="Tx404 privacy flow diagram">
+            <div className={styles.diagramHeader}><span>TX404 / FLOW_01</span><span>NON-CUSTODIAL</span></div>
+            <div className={styles.diagramCanvas}>
+              <div className={styles.diagramLine} />
+              <div className={`${styles.node} ${styles.nodeWallet}`}><b>W</b><span>USER WALLET</span></div>
+              <div className={`${styles.node} ${styles.nodeTx}`}><strong>404</strong><span>TX404 LAYER</span></div>
+              <div className={`${styles.node} ${styles.nodePool}`}><b>◇</b><span>STRK20 POOL</span></div>
+              <div className={styles.flowLabel}>key material<br /><strong>never leaves</strong></div>
+              <div className={styles.diagramFoot}><span>shielded state</span><span>public edge</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.metrics}>
+          <div><strong>01</strong><span>Wallet-mediated</span><small>No custody. No keys.</small></div>
+          <div><strong>02</strong><span>Four primitives</span><small>Shield / send / unshield / query</small></div>
+          <div><strong>03</strong><span>Built for builders</span><small>TypeScript core + React hooks</small></div>
+        </section>
+
+        <section id="console" className={styles.consoleSection}>
+          <div className={styles.sectionIntro}>
+            <p className={styles.eyebrow}><span /> LIVE REFERENCE CONSOLE</p>
+            <h2>Try the private rail.</h2>
+            <p>Connect a privacy-enabled wallet to test the same primitives an integrating app calls. Start on Sepolia.</p>
+          </div>
+          <div className={styles.consoleFrame}>
+            <div className={styles.consoleBar}><span className={styles.liveDot} /> TX404 CONTROL SURFACE <span className={styles.barMeta}>TESTNET FIRST / READY</span></div>
+            <WalletAccountV6Tag />
+          </div>
+        </section>
+
+        <section className={styles.bottomBand}>
+          <div><span className={styles.bigCode}>tx404</span><p>Private by architecture.<br />Simple by interface.</p></div>
+          <a href="/checkout" className={styles.checkoutLink}>Open private checkout <span>↗</span></a>
+        </section>
       </main>
 
       <footer className={styles.footer}>
-        <a href="/checkout">Private checkout</a>
-        <span className={styles.footerDot}>·</span>
-        <a href="https://github.com/Abhyudday/tx404" target="_blank" rel="noreferrer">
-          Repo
-        </a>
-        <span className={styles.footerDot}>·</span>
-        <span>Powered by Starknet.js v10.4.0</span>
+        <span>TX404 / OPEN INFRASTRUCTURE</span>
+        <span>Starknet.js v10.4.0 · Wallet API 0.10.3</span>
+        <a href="https://strk20-by-example.org/" target="_blank" rel="noreferrer">STRK20 docs ↗</a>
       </footer>
     </div>
   );

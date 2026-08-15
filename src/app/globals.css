@@ -91,14 +91,13 @@ body {
   overflow-x: hidden;
 }
 
-/* Redesigned app is committed to a single light "aurora" theme. */
 html {
   color-scheme: light;
 }
 
 body {
-  color: #0b0a14;
-  background: #fbf7fd;
+  color: #111311;
+  background: #111311;
 }
 
 a {

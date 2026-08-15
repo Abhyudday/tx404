@@ -75,7 +75,7 @@ export default function CheckoutPage() {
       <section className={styles.checkout}>
         <div className={styles.heading}>
           <span className={styles.kicker}>Private checkout</span>
-          <h1>Pay with shielded STRK</h1>
+          <h1>Pay with<br /><em>shielded STRK.</em></h1>
           <p>The merchant receives an in-pool transfer without publishing the sender, recipient, token, or amount.</p>
         </div>
 
