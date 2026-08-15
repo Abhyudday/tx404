@@ -1,0 +1,782 @@
+/* ── Tx404 reference console ─────────────────────────────────────────────────
+   Shared by WalletAccountV6Tag (the live console) and SelectWallet (the connect
+   pill + wallet picker). It inherits the page's tokens from globals.css, so the
+   console is part of the page rather than a foreign widget dropped onto it —
+   there is no theme bridge and nothing to reconcile.
+
+   Two rules hold this file together:
+     · A shielded value is never faked. It is drawn with var(--hatch).
+     · Every interactive element has a visible :focus-visible ring. */
+
+/* ── Panel ─────────────────────────────────────────────────────────────────── */
+
+.panel {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────────── */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--inset);
+}
+
+.tab {
+  position: relative;
+  padding: 14px 12px 13px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color .15s ease;
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+.tab:focus-visible {
+  outline-offset: -3px;
+}
+
+.tabActive {
+  color: var(--shield-deep);
+  font-weight: 600;
+}
+
+.tabActive::after {
+  position: absolute;
+  right: 12px;
+  bottom: -1px;
+  left: 12px;
+  height: 2px;
+  content: "";
+  background: var(--shield);
+}
+
+/* ── Amount block ──────────────────────────────────────────────────────────── */
+
+.inputBlock {
+  margin: 18px 18px 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--inset);
+}
+
+.inputLabel {
+  display: block;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.inputMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.bigValue {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tokenPill {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tokenDot {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--field-deep);
+}
+
+.subLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.subMono {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+
+/* ── Meta rows ─────────────────────────────────────────────────────────────── */
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 18px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.feeVal {
+  color: var(--ink-soft);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+
+.netOk,
+.netBad {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.netOk {
+  border-color: var(--confirm);
+  background: var(--confirm-tint);
+  color: var(--confirm);
+}
+
+.netBad {
+  border-color: var(--alert);
+  background: var(--alert-tint);
+  color: var(--alert);
+}
+
+.netDot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.netOkDot {
+  background: var(--confirm);
+}
+
+.netBadDot {
+  background: var(--alert);
+}
+
+.warn {
+  margin: 14px 18px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--expose-line);
+  border-left: 3px solid var(--expose-bright);
+  border-radius: var(--r-sm);
+  background: var(--expose-tint);
+  color: var(--expose);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ── Disclosure: what this call publishes, before you make it ──────────────── */
+
+.discl {
+  margin: 18px 18px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.disclHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--line);
+  background: var(--inset);
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.disclRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 13px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.disclRow + .disclRow {
+  border-top: 1px solid var(--line-soft);
+}
+
+.disclText {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink-soft);
+}
+
+.disclMark {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 12px;
+  border-radius: 2px;
+  background-image: var(--hatch);
+}
+
+.disclTag {
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.disclShield {
+  background: var(--shield-tint);
+  color: var(--shield-deep);
+}
+
+.disclExpose {
+  background: var(--expose-tint);
+  color: var(--expose);
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--shield-line);
+  background: var(--shield-tint);
+}
+
+.btn:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.btnGreen {
+  border-color: var(--confirm);
+  background: var(--confirm-tint);
+  color: var(--confirm);
+}
+
+.btnGreen:hover:not(:disabled) {
+  border-color: var(--confirm);
+  background: #d3ecdf;
+}
+
+.btnBlock {
+  width: 100%;
+}
+
+.btnCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 20px;
+  border: 1px solid var(--shield-deep);
+  border-radius: var(--r-md);
+  background: var(--shield);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.btnCta:hover:not(:disabled) {
+  background: var(--shield-deep);
+}
+
+.btnCta:disabled {
+  border-color: var(--line);
+  background: var(--field-deep);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.btnCta:focus-visible {
+  outline-color: var(--ink);
+}
+
+/* ── Verdict (echo round-trip check) ───────────────────────────────────────── */
+
+.verdict {
+  margin: 18px 18px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--inset);
+}
+
+.verdictPass {
+  border-color: var(--confirm);
+  background: var(--confirm-tint);
+}
+
+.verdictFail {
+  border-color: var(--alert);
+  background: var(--alert-tint);
+}
+
+.verdictHead {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.verdictPass .verdictHead {
+  color: var(--confirm);
+}
+
+.verdictFail .verdictHead {
+  color: var(--alert);
+}
+
+.verdictRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  color: var(--ink-soft);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ── Receipt ───────────────────────────────────────────────────────────────── */
+
+.receipt {
+  margin: 18px 18px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.receiptPending {
+  border-color: var(--expose-line);
+}
+
+.receiptOk {
+  border-color: var(--shield-line);
+}
+
+.receiptError {
+  border-color: var(--alert);
+}
+
+.receiptHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--inset);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.receiptPending .receiptHead {
+  background: var(--expose-tint);
+  color: var(--expose);
+}
+
+.receiptOk .receiptHead {
+  background: var(--shield-tint);
+  color: var(--shield-deep);
+}
+
+.receiptError .receiptHead {
+  background: var(--alert-tint);
+  color: var(--alert);
+}
+
+.receiptIcon {
+  display: grid;
+  flex: 0 0 18px;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: currentColor;
+  color: var(--surface);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.receiptRows {
+  display: flex;
+  flex-direction: column;
+}
+
+.receiptRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px;
+}
+
+.receiptRow + .receiptRow {
+  border-top: 1px solid var(--line-soft);
+}
+
+.receiptLabel {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.receiptValue {
+  min-width: 0;
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.receiptLink {
+  color: var(--shield-deep);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+  text-decoration: underline;
+  text-decoration-color: var(--shield-line);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.receiptLink:hover {
+  text-decoration-color: var(--shield);
+}
+
+.receiptNote {
+  padding: 11px 14px;
+  border-top: 1px solid var(--line-soft);
+  background: var(--inset);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ── Connect pill + connected address ──────────────────────────────────────── */
+
+.connectPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1px solid var(--shield-deep);
+  border-radius: 999px;
+  background: var(--shield);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.connectPill:hover:not(:disabled) {
+  background: var(--shield-deep);
+}
+
+.connectPill:disabled {
+  border-color: var(--line);
+  background: var(--field-deep);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.addrPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+}
+
+.addrDot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--confirm);
+}
+
+.addrDisconnect {
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.addrDisconnect:hover {
+  background: var(--alert-tint);
+  color: var(--alert);
+}
+
+/* ── Wallet picker ─────────────────────────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 21, 38, .44);
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  width: min(420px, 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--lift-lg);
+  overflow: hidden;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.modalTitle {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -.015em;
+}
+
+.modalClose {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-md);
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.modalClose:hover {
+  background: var(--inset);
+  color: var(--ink);
+}
+
+.walletList {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.walletRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.walletRow:hover:not(:disabled) {
+  background: var(--shield-tint);
+}
+
+.walletRow:disabled {
+  cursor: progress;
+  opacity: .6;
+}
+
+.walletIcon {
+  display: grid;
+  flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--inset);
+}
+
+.walletIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.walletName {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.walletGo {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+}
+
+.walletHint {
+  padding: 4px 20px 20px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.walletHint a {
+  color: var(--shield-deep);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--shield-line);
+  text-underline-offset: 3px;
+}
+
+.errorText {
+  margin: 0 12px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--alert);
+  border-radius: var(--r-sm);
+  background: var(--alert-tint);
+  color: var(--alert);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ── Narrow screens ────────────────────────────────────────────────────────── */
+
+@media (max-width: 620px) {
+  .tabs {
+    padding: 0 10px;
+  }
+
+  .tab {
+    padding: 12px 9px;
+    font-size: 12px;
+  }
+
+  .inputBlock,
+  .discl,
+  .verdict,
+  .receipt {
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+
+  .feeRow,
+  .warn {
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+
+  .inputBlock {
+    padding: 14px;
+  }
+
+  .bigValue {
+    font-size: 24px;
+  }
+
+  .receiptRow {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .receiptValue,
+  .receiptLink {
+    text-align: left;
+  }
+}
