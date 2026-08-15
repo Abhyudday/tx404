@@ -1,0 +1,29 @@
+{
+  "name": "@tx404/core",
+  "version": "0.1.0",
+  "description": "Framework-neutral non-custodial STRK20 payment primitives",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "@starknet-io/types-js": "0.10.3"
+  }
+}

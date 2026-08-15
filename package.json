@@ -1,0 +1,44 @@
+{
+  "name": "tx404",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/consumer-smoke"
+  ],
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "npm run build:packages && next build --webpack",
+    "build:packages": "npm run build --workspace @tx404/core && npm run build --workspace @tx404/react && npm run build --workspace @tx404/adapter-avnu",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:consumer": "npm run build:packages && npm run smoke --workspace examples/consumer-smoke",
+    "pack:check": "npm pack --dry-run --workspace @tx404/core && npm pack --dry-run --workspace @tx404/react && npm pack --dry-run --workspace @tx404/adapter-avnu",
+    "verify": "npm run lint && npm test && npm run test:consumer && npm run build && npm audit",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@avnu/avnu-sdk": "4.2.0",
+    "@starknet-io/get-starknet-discovery": "6.0.2",
+    "@starknet-io/get-starknet-wallet-standard": "6.0.2",
+    "next": "^16.0.8",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "sharp": "^0.35.3",
+    "starknet": "10.4.0",
+    "zustand": "^5.0.9"
+  },
+  "devDependencies": {
+    "@starknet-io/types-js": "0.10.3",
+    "@types/node": "24.10.2",
+    "@types/react": "19.2.7",
+    "tsup": "8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "4.1.10"
+  },
+  "overrides": {
+    "esbuild": "0.28.1"
+  },
+  "packageManager": "npm@10.9.8"
+}

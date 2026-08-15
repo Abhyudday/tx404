@@ -1,0 +1,30 @@
+{
+  "name": "@tx404/react",
+  "version": "0.1.0",
+  "description": "React provider and hooks for the Tx404 STRK20 SDK",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "@tx404/core": "0.1.0",
+    "react": ">=18"
+  }
+}

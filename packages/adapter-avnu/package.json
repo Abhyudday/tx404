@@ -1,0 +1,36 @@
+{
+  "name": "@tx404/adapter-avnu",
+  "version": "0.1.0",
+  "description": "Experimental AVNU private swap adapter for Tx404",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepack": "npm run build"
+  },
+  "peerDependencies": {
+    "@avnu/avnu-sdk": "4.2.0",
+    "@tx404/core": "0.1.0",
+    "starknet": ">=10.4.0 <11"
+  }
+}
